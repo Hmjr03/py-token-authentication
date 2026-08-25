@@ -159,18 +159,9 @@ class OrderViewSet(
     )
     serializer_class = OrderSerializer
     pagination_class = OrderPagination
-    permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
-
-    def get_permissions(self):
-        if self.action == "create":
-            return (IsAuthenticated(),)
-
-        return super().get_permissions()
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return self.queryset.none()
-
         return Order.objects.filter(user=self.request.user)
 
     def get_serializer_class(self):
